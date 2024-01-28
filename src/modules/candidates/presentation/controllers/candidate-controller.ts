@@ -14,6 +14,10 @@ export class CandidateController {
     const skillsArray = skills?.toString().split(",") || undefined;
 
     const candidates = await this.listCandidatesUseCase.execute(skillsArray);
+
+    if (candidates.length === 0)
+      return res.status(404).json({ message: "Nenhum candidato encontrado" });
+
     return res.json(candidates);
   }
 
