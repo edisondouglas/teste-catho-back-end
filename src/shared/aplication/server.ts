@@ -1,5 +1,6 @@
 import * as express from "express";
 import { router } from "../presentation/routes";
+import * as cors from "cors";
 import { AppDataSource } from "../infra/typeorm/configs/data-source";
 
 const app = express();
@@ -7,6 +8,8 @@ const app = express();
 app.use(express.json());
 
 app.use(router);
+
+app.use(cors());
 
 AppDataSource.initialize()
   .then(() => {
