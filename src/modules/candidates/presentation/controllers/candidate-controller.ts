@@ -11,7 +11,9 @@ export class CandidateController {
   public async getAll(req: Request, res: Response): Promise<Response> {
     const { skills } = req.query;
 
-    const candidates = await this.listCandidatesUseCase.execute(skills);
+    const skillsArray = skills?.toString().split(",") || undefined;
+
+    const candidates = await this.listCandidatesUseCase.execute(skillsArray);
     return res.json(candidates);
   }
 

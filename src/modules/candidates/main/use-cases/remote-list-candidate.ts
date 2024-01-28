@@ -5,9 +5,27 @@ import { ListCandidatesUseCase } from "../../domain/use-cases/list-candidates";
 export class RemoteListCandidatesUseCase implements ListCandidatesUseCase {
   constructor(private readonly candidateRepository: CandidateRepository) {}
 
-  async execute(skills: string[]): Promise<Candidate[]> {
+  async execute(skills: string[] | undefined): Promise<Candidate[]> {
     const candidates = await this.candidateRepository.findAll();
 
-    return candidates;
+    if (skills === undefined) return candidates;
+
+    const candidatesWithSkills = candidates.filter((candidate) => {
+      return candidate.skills.some((skill) => skills.includes(skill));
+    });
+
+    const candidatesOrdered = candidatesWithSkills.sort((a, b) => {
+      const aSkillsCount = a.skills.filter((skill) =>
+        skills.includes(skill)
+      ).length;
+
+      const bSkillsCount = b.skills.filter((skill) =>
+        skills.includes(skill)
+      ).length;
+
+      return bSkillsCount - aSkillsCount;
+    });
+
+    return candidatesOrdered;
   }
 }
